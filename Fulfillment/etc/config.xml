@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+    <modules>
+        <Whiplash_Fulfillment>
+            <version>0.0.1</version>
+        </Whiplash_Fulfillment>
+    </modules>
+    <global>
+        <helpers>
+            <whiplash_fulfillment>
+                <class>Whiplash_Fulfillment_Helper</class>
+            </whiplash_fulfillment>
+        </helpers>
+        <events>
+            <catalog_product_save_after>
+                <observers>
+                    <whiplash_fulfillment_product_observer>
+                        <class>Whiplash_Fulfillment_Model_Observer</class>
+                        <method>update_or_create_item</method>
+                    </whiplash_fulfillment_product_observer>                    
+                </observers>
+            </catalog_product_save_after>
+            <sales_order_place_after>
+                <observers>
+                    <whiplash_fulfillment_order_observer>
+                        <class>Whiplash_Fulfillment_Model_Observer</class>
+                        <method>create_order</method>
+                    </whiplash_fulfillment_order_observer>                    
+                </observers>
+            </sales_order_place_after>
+            <!-- This fires when notes are added, but *not* when address is saved. Address save event does not provide order object, so we can't listen to it -->
+            <sales_order_save_after>
+                <observers>
+                    <whiplash_fulfillment_order_observer>
+                        <class>Whiplash_Fulfillment_Model_Observer</class>
+                        <method>update_order</method>
+                    </whiplash_fulfillment_order_observer>                    
+                </observers>
+            </sales_order_save_after>
+        </events>
+    </global>
+</config>
