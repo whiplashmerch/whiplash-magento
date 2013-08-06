@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+    <modules>
+        <Whiplash_Fulfillment>
+            <active>true</active>
+            <codePool>community</codePool>
+        </Whiplash_Fulfillment>
+    </modules>
+</config>
