@@ -1,7 +1,7 @@
 whiplash-magento
 ================
 
-Whiplash Magento Extension
+Whiplash Magento Extension, currently tested with Community Edition 1.6.2
 
 
 Adds real-time synchronization of Products and Orders between Magento and Whiplash.
