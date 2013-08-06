@@ -37,7 +37,7 @@ class Whiplash_Fulfillment_Model_Observer extends Varien_Object
     protected function init_whiplash()
     {
         // Set the API credentials
-        $api_key = 'cLpsLgbEt1y3yKXcsr5u'; // Jamyrathon
+        $api_key = 'Hc2BHTn3bcrwyPooyYTP'; // Whiplash Sandbox on Testing Server
         $api_version = ''; // OPTIONAL: Leave this blank to use the most recent API
         $test = true; // OPTIONAL: If test is true, this will use your sandbox account
 
