@@ -137,37 +137,39 @@ class Whiplash_Fulfillment_Model_Observer extends Varien_Object
         $order = $api->create_order($order_attributes); 
     }    
 
-    public function update_order($observer){
-        // Updates the address and shipping method in Whiplash
+    // public function update_order($observer){
+    // Not currently supported.
 
-        // Translate magento fields for whiplash
-        $api = $this->init_whiplash();
-        $_order = $observer->getOrder();
-        $_shippingAddress = $_order->getShippingAddress();
-        $_shippingMethod = $_shippingAddress->getAddressShippingMethod();
-        $_shipping_name = $_shippingAddress->getFirstname() . " " . $_shippingAddress->getLastname();
-        $order_attributes = array(
-                'shipping_name'         => $_shipping_name,
-                'shipping_company'      => $_shippingAddress->getCompany(),
-                'shipping_address_1'    => $_shippingAddress->getStreetFull(), // All address lines gets truncated into 1
-                'shipping_city'         => $_shippingAddress->getCity(),
-                'shipping_state'        => $_shippingAddress->getRegion(),
-                'shipping_zip'          => $_shippingAddress->getPostcode(),
-                'shipping_country'      => $_shippingAddress->getCountry_id(),
-                'email'                 => $_order->getCustomerEmail(),
-                'originator_id'         => $_order->getEntity_id(), 
-                'order_orig'            => $_order->getRealOrderId(),
-                'req_ship_method_text'  => $_order->getShipping_method(),
-                'req_ship_method_price' => $_order->getShipping_amount()
-            );
+    //     // Updates the address and shipping method in Whiplash
 
-        // Find the Whiplash order
-        $whiplash_order = $api->get_order_by_originator($_order->getEntity_id());
+    //     // Translate magento fields for whiplash
+    //     $api = $this->init_whiplash();
+    //     $_order = $observer->getOrder();
+    //     $_shippingAddress = $_order->getShippingAddress();
+    //     $_shippingMethod = $_shippingAddress->getAddressShippingMethod();
+    //     $_shipping_name = $_shippingAddress->getFirstname() . " " . $_shippingAddress->getLastname();
+    //     $order_attributes = array(
+    //             'shipping_name'         => $_shipping_name,
+    //             'shipping_company'      => $_shippingAddress->getCompany(),
+    //             'shipping_address_1'    => $_shippingAddress->getStreetFull(), // All address lines gets truncated into 1
+    //             'shipping_city'         => $_shippingAddress->getCity(),
+    //             'shipping_state'        => $_shippingAddress->getRegion(),
+    //             'shipping_zip'          => $_shippingAddress->getPostcode(),
+    //             'shipping_country'      => $_shippingAddress->getCountry_id(),
+    //             'email'                 => $_order->getCustomerEmail(),
+    //             'originator_id'         => $_order->getEntity_id(), 
+    //             'order_orig'            => $_order->getRealOrderId(),
+    //             'req_ship_method_text'  => $_order->getShipping_method(),
+    //             'req_ship_method_price' => $_order->getShipping_amount()
+    //         );
 
-        // Post to Whiplash
-        $order = $api->update_order($whiplash_order->id, $order_attributes); 
+    //     // Find the Whiplash order
+    //     $whiplash_order = $api->get_order_by_originator($_order->getEntity_id());
+
+    //     // Post to Whiplash
+    //     $order = $api->update_order($whiplash_order->id, $order_attributes); 
 
 
-    }
+    // }
 
 }

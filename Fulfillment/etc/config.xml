@@ -29,15 +29,6 @@
                     </whiplash_fulfillment_order_observer>                    
                 </observers>
             </sales_order_place_after>
-            <!-- This fires when notes are added, but *not* when address is saved. Address save event does not provide order object, so we can't listen to it -->
-            <sales_order_save_after>
-                <observers>
-                    <whiplash_fulfillment_order_observer>
-                        <class>Whiplash_Fulfillment_Model_Observer</class>
-                        <method>update_order</method>
-                    </whiplash_fulfillment_order_observer>                    
-                </observers>
-            </sales_order_save_after>
         </events>
     </global>
 </config>
