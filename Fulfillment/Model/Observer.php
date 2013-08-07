@@ -37,7 +37,7 @@ class Whiplash_Fulfillment_Model_Observer extends Varien_Object
     protected function init_whiplash()
     {
         // Set the API credentials
-        $api_key = 'Hc2BHTn3bcrwyPooyYTP'; // Whiplash Sandbox on Testing Server
+        $api_key = 'cLpsLgbEt1y3yKXcsr5u'; // Whiplash Sandbox on Testing Server
         $api_version = ''; // OPTIONAL: Leave this blank to use the most recent API
         $test = true; // OPTIONAL: If test is true, this will use your sandbox account
 
@@ -78,6 +78,8 @@ class Whiplash_Fulfillment_Model_Observer extends Varien_Object
                 'price'                 => $_product->getPrice(),
                 'wholesale_cost'        => $_product->getCost(),
                 'originator_id'         => $_product->getEntity_id(),
+                //TODO:  'shop_id'               => //Shop ID,
+                //TODO:   'provider'  => 'magento'
                 );
 
             // Check if the item exists in Whiplash
@@ -97,7 +99,7 @@ class Whiplash_Fulfillment_Model_Observer extends Varien_Object
     // Creates an order and order_items in Whiplash
     {
         $api = $this->init_whiplash();
-        $_order = $observer->getEvent()->getOrder();
+        $_order = $observer->getEvent()->getInvoice()->getOrder();
         $_shippingAddress = $_order->getShippingAddress();
         $_shippingMethod = $_shippingAddress->getAddressShippingMethod();
 
@@ -112,7 +114,9 @@ class Whiplash_Fulfillment_Model_Observer extends Varien_Object
                 'shipping_zip'          => $_shippingAddress->getPostcode(),
                 'shipping_country'      => $_shippingAddress->getCountry_id(),
                 'email'                 => $_order->getCustomerEmail(),
-                'originator_id'         => $_order->getEntity_id(), 
+                'originator_id'         => $_order->getRealOrderId(),
+                //TODO:  'shop_id'      => //Shop ID,
+                //TODO:   'provider'    => 'magento'
                 'order_orig'            => $_order->getRealOrderId(),
                 'req_ship_method_text'  => $_order->getShipping_method(),
                 'req_ship_method_price' => $_order->getShipping_amount(),
@@ -129,16 +133,19 @@ class Whiplash_Fulfillment_Model_Observer extends Varien_Object
                     $whiplash_item = $api->get_items_by_sku($item->getSku()); // This is an array; we want to the first result
                     // Find the id of the whiplash item
                     $whiplash_item = $whiplash_item[0];
+                    //TODO:  'shop_id'               => //Shop ID,
+                    //TODO:   'provider'  => 'magento'
                     $order_attributes['order_items'][$i] = array('quantity' => $item->getQtyOrdered(), 'item_id' => $whiplash_item->id);
                     $i += 1;
                 }
             }
         // Post to Whiplash
         $order = $api->create_order($order_attributes); 
+
     }    
 
     // public function update_order($observer){
-    // Not currently supported.
+    // Not currently supported. This could overwrite intentional changes in Whiplash. Possibly see which side is newer to allow it through?
 
     //     // Updates the address and shipping method in Whiplash
 
