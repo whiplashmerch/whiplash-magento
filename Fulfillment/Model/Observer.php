@@ -77,9 +77,7 @@ class Whiplash_Fulfillment_Model_Observer extends Varien_Object
                 'image_originator_url'  => $_product->getMediaConfig()->getMediaUrl($_product->getData('image')),
                 'price'                 => $_product->getPrice(),
                 'wholesale_cost'        => $_product->getCost(),
-                'originator_id'         => $_product->getEntity_id(),
-                //TODO:  'shop_id'               => //Shop ID,
-                //TODO:   'provider'  => 'magento'
+                'originator_id'         => $_product->getEntity_id()
                 );
 
             // Check if the item exists in Whiplash
@@ -115,8 +113,6 @@ class Whiplash_Fulfillment_Model_Observer extends Varien_Object
                 'shipping_country'      => $_shippingAddress->getCountry_id(),
                 'email'                 => $_order->getCustomerEmail(),
                 'originator_id'         => $_order->getRealOrderId(),
-                //TODO:  'shop_id'      => //Shop ID,
-                //TODO:   'provider'    => 'magento'
                 'order_orig'            => $_order->getRealOrderId(),
                 'req_ship_method_text'  => $_order->getShipping_method(),
                 'req_ship_method_price' => $_order->getShipping_amount(),
@@ -133,8 +129,6 @@ class Whiplash_Fulfillment_Model_Observer extends Varien_Object
                     $whiplash_item = $api->get_items_by_sku($item->getSku()); // This is an array; we want to the first result
                     // Find the id of the whiplash item
                     $whiplash_item = $whiplash_item[0];
-                    //TODO:  'shop_id'               => //Shop ID,
-                    //TODO:   'provider'  => 'magento'
                     $order_attributes['order_items'][$i] = array('quantity' => $item->getQtyOrdered(), 'item_id' => $whiplash_item->id);
                     $i += 1;
                 }

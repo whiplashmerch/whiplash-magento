@@ -21,7 +21,6 @@
                     </whiplash_fulfillment_product_observer>                    
                 </observers>
             </catalog_product_save_after>
-<!-- sales_order_invoice_register -->
             <sales_order_invoice_register>
                 <observers>
                     <whiplash_fulfillment_order_observer>
