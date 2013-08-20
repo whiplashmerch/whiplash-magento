@@ -37,9 +37,9 @@ class Whiplash_Fulfillment_Model_Observer extends Varien_Object
     protected function init_whiplash()
     {
         // Set the API credentials
-        $api_key = 'cLpsLgbEt1y3yKXcsr5u'; // Whiplash Sandbox on Testing Server
-        $api_version = ''; // OPTIONAL: Leave this blank to use the most recent API
-        $test = true; // OPTIONAL: If test is true, this will use your sandbox account
+        $api_key = Mage::getStoreConfig('whiplash/api/key'); // Whiplash Sandbox on Testing Server
+        $api_version =  Mage::getStoreConfig('whiplash/api/version'); // OPTIONAL: Leave this blank to use the most recent API
+        $test = Mage::getStoreConfig('whiplash/api/test_mode'); // OPTIONAL: If test is true, this will use your sandbox account
 
         // Include the Whiplash lib and initialize
         $ExternalLibPath=Mage::getBaseDir('code') . DS . 'community' . DS . 'Whiplash' . DS . 'Fulfillment'. DS . 'lib' . DS .'WhiplashApi.php';
