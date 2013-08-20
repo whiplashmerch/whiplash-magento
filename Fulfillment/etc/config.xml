@@ -7,10 +7,15 @@
         </Whiplash_Fulfillment>
     </modules>
     <global>
+        <models>
+            <fulfillment>
+                <class>Whiplash_Fulfillment_Model</class>
+            </fulfillment>
+        </models>
         <helpers>
-            <whiplash_fulfillment>
+            <fulfillment>
                 <class>Whiplash_Fulfillment_Helper</class>
-            </whiplash_fulfillment>
+            </fulfillment>
         </helpers>
         <events>
             <catalog_product_save_after>
@@ -31,4 +36,13 @@
             </sales_order_invoice_register>
         </events>
     </global>
+    <default>
+        <whiplash>
+            <api>
+                <key></key> <!-- No key by default-->
+                <version></version> <!-- Latest Version (i.e. no value) by default-->
+                <test_mode>1</test_mode> <!-- Test mode by default-->
+            </api>
+        </whiplash>
+    </default>
 </config>

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<config>
+	<acl>
+		<resources>
+			<all>Allow Everything</all>
+			<admin>
+				<children>
+					<system>
+						<children>
+							<config>
+								<children>
+									<whiplash>
+										<title>Whiplash Configuration</title>
+									</whiplash>
+								</children>
+							</config>
+						</children>
+					</system>
+				</children>
+			</admin>
+		</resources>
+	</acl>
+</config>
