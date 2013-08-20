@@ -55,24 +55,12 @@ class Whiplash_Fulfillment_Model_Observer extends Varien_Object
         $_product = $observer->getProduct(); 
         if($_product->getTypeID() == 'simple'){
 
-            $description = array();
-            // This works, but you have to know what attributes to look for; lame.
-            array_push($description, $_product->getResource()->getAttribute('gender')->getFrontend()->getValue($_product));
-            array_push($description, $_product->getResource()->getAttribute('color')->getFrontend()->getValue($_product));
-            array_push($description, "Size " . $_product->getResource()->getAttribute('shirt_size')->getFrontend()->getValue($_product));
-            array_push($description, "Size " . $_product->getResource()->getAttribute('shoe_size')->getFrontend()->getValue($_product));
-            array_push($description, $_product->getResource()->getAttribute('shoe_type')->getFrontend()->getValue($_product));
-            $disallowed_words = array("No", "Size No");
-            $clean_description = array_diff($description, $disallowed_words); // Strip any nil responses
-            $description_text = implode(", ", $clean_description);
-
             // Get the expected quantity
             $quantity = Mage::getModel('cataloginventory/stock_item')->loadByProduct($_product)->getQty();
 
             $item = array(
                 'sku'                   => $_product->getSku(),
                 'title'                 => $_product->getName(),
-                'description'           => $description_text,
                 'exp_quantity'          => $quantity,
                 'image_originator_url'  => $_product->getMediaConfig()->getMediaUrl($_product->getData('image')),
                 'price'                 => $_product->getPrice(),
