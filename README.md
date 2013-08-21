@@ -10,4 +10,7 @@ Adds real-time synchronization of Products and Orders between Magento and Whipla
 - Create a directory called Whiplash in YourMagentoInstallation/app/code/community
 - Place the Fulfillment directory into it
 - Move Whiplash_Fulfillment.xml to YourMagentoInstalltion/app/etc/modules
-- Set the Whiplash APIKey variable in YourMagnetoInstallation/app/code/community/Whiplash/Fulfillment/Model/Observer.php
+- In the admin area of Magento, go to System -> Configuration -> General -> Whiplash
+- Select API Configuration, enter your API Key, and Save Config
+
+To test, save a product in Magento. It should be created or updated in your Whiplash account.
