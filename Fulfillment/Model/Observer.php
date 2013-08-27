@@ -55,6 +55,18 @@ class Whiplash_Fulfillment_Model_Observer extends Varien_Object
         $_product = $observer->getProduct(); 
         if($_product->getTypeID() == 'simple'){
 
+            $parentProduct = Mage::getResourceSingleton('catalog/product_type_configurable')
+                ->getParentIdsByChild($_product->getId());
+
+            if(is_array($parentProduct) && !empty($parentProduct))
+            {
+                $parentProduct = Mage::getModel('catalog/product')->load(array_pop($parentProduct));
+                if($parentProduct && $parentProduct->getId())
+                {
+                    $image = $parentProduct->getMediaConfig()->getMediaUrl($parentProduct->getData('image'));
+                }
+            }
+
             // Get the expected quantity
             $quantity = Mage::getModel('cataloginventory/stock_item')->loadByProduct($_product)->getQty();
 
@@ -62,14 +74,14 @@ class Whiplash_Fulfillment_Model_Observer extends Varien_Object
                 'sku'                   => $_product->getSku(),
                 'title'                 => $_product->getName(),
                 'exp_quantity'          => $quantity,
-                'image_originator_url'  => $_product->getMediaConfig()->getMediaUrl($_product->getData('image')),
+                'image_originator_url'  => $image?$image:$_product->getMediaConfig()->getMediaUrl($_product->getData('image')),
                 'price'                 => $_product->getPrice(),
                 'wholesale_cost'        => $_product->getCost(),
-                'originator_id'         => $_product->getEntity_id()
+                'originator_id'         => $_product->getId()
                 );
 
             // Check if the item exists in Whiplash
-            $whiplash_item = $api->get_item_by_originator($_product->getEntity_id());
+            $whiplash_item = $api->get_item_by_originator($_product->getId());
             if (!$whiplash_item){
             // We didn't get an item back, create it
                 $api->create_item($item);            }
@@ -102,8 +114,8 @@ class Whiplash_Fulfillment_Model_Observer extends Varien_Object
                 'email'                 => $_order->getCustomerEmail(),
                 'originator_id'         => $_order->getRealOrderId(),
                 'order_orig'            => $_order->getRealOrderId(),
-                'req_ship_method_text'  => $_order->getShipping_method(),
-                'req_ship_method_price' => $_order->getShipping_amount(),
+                'req_ship_method_text'  => $_order->getShippingMethod(),
+                'req_ship_method_price' => $_order->getShippingAmount(),
                 'order_items_attributes' => array()
             );
 
