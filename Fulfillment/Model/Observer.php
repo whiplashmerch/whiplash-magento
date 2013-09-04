@@ -33,6 +33,17 @@
 
 class Whiplash_Fulfillment_Model_Observer extends Varien_Object
 {
+	protected function isEnabled()
+	{
+		$storeId = Mage::app()->getStore()->getId();
+		if($storeId == 0) // If the store id is 0 then we are in the admin area
+		{
+			// We want to make sure that whiplash is enabled for the requested store, if there is a requested store
+			$storeId = Mage::app()->getRequest()->getParam('store'); //storeId will contain either a store id, or null, if no specific store was requested
+		}
+
+		return Mage::getStoreConfig('whiplash/api/enabled',$storeId);
+	}
 
     protected function init_whiplash()
     {
@@ -50,93 +61,98 @@ class Whiplash_Fulfillment_Model_Observer extends Varien_Object
 
     public function update_or_create_item($observer)
     // Creates or updates an item in Whiplash
-    {   
-        $api = $this->init_whiplash();
-        $_product = $observer->getProduct(); 
-        if($_product->getTypeID() == 'simple'){
+    {
+		if($this->isEnabled())
+		{
+			$api = $this->init_whiplash();
+			$_product = $observer->getProduct();
+			if($_product->getTypeID() == 'simple'){
 
-            $parentProduct = Mage::getResourceSingleton('catalog/product_type_configurable')
-                ->getParentIdsByChild($_product->getId());
+				$parentProduct = Mage::getResourceSingleton('catalog/product_type_configurable')
+					->getParentIdsByChild($_product->getId());
 
-            if(is_array($parentProduct) && !empty($parentProduct))
-            {
-                $parentProduct = Mage::getModel('catalog/product')->load(array_pop($parentProduct));
-                if($parentProduct && $parentProduct->getId())
-                {
-                    $image = $parentProduct->getMediaConfig()->getMediaUrl($parentProduct->getData('image'));
-                }
-            }
+				if(is_array($parentProduct) && !empty($parentProduct))
+				{
+					$parentProduct = Mage::getModel('catalog/product')->load(array_pop($parentProduct));
+					if($parentProduct && $parentProduct->getId())
+					{
+						$image = $parentProduct->getMediaConfig()->getMediaUrl($parentProduct->getData('image'));
+					}
+				}
 
-            // Get the expected quantity
-            $quantity = Mage::getModel('cataloginventory/stock_item')->loadByProduct($_product)->getQty();
+				// Get the expected quantity
+				$quantity = Mage::getModel('cataloginventory/stock_item')->loadByProduct($_product)->getQty();
 
-            $item = array(
-                'sku'                   => $_product->getSku(),
-                'title'                 => $_product->getName(),
-                'exp_quantity'          => $quantity,
-                'image_originator_url'  => $image?$image:$_product->getMediaConfig()->getMediaUrl($_product->getData('image')),
-                'price'                 => $_product->getPrice(),
-                'wholesale_cost'        => $_product->getCost(),
-                'originator_id'         => $_product->getId()
-                );
+				$item = array(
+					'sku'                   => $_product->getSku(),
+					'title'                 => $_product->getName(),
+					'exp_quantity'          => $quantity,
+					'image_originator_url'  => $image?$image:$_product->getMediaConfig()->getMediaUrl($_product->getData('image')),
+					'price'                 => $_product->getPrice(),
+					'wholesale_cost'        => $_product->getCost(),
+					'originator_id'         => $_product->getId()
+					);
 
-            // Check if the item exists in Whiplash
-            $whiplash_item = $api->get_item_by_originator($_product->getId());
-            if (!$whiplash_item){
-            // We didn't get an item back, create it
-                $api->create_item($item);            }
-            // Item exists in Whiplash, so update it
-            else {
-                $api->update_item($whiplash_item->id,$item);
-            }
-        } // Failed type == simple test, ignore item
+				// Check if the item exists in Whiplash
+				$whiplash_item = $api->get_item_by_originator($_product->getId());
+				if (!$whiplash_item){
+				// We didn't get an item back, create it
+					$api->create_item($item);            }
+				// Item exists in Whiplash, so update it
+				else {
+					$api->update_item($whiplash_item->id,$item);
+				}
+			} // Failed type == simple test, ignore item
+        }
     }
 
 
     public function create_order($observer)
     // Creates an order and order_items in Whiplash
     {
-        $api = $this->init_whiplash();
-        $_order = $observer->getEvent()->getInvoice()->getOrder();
-        $_shippingAddress = $_order->getShippingAddress();
-        $_shippingMethod = $_shippingAddress->getAddressShippingMethod();
+		if($this->isEnabled())
+		{
+			$api = $this->init_whiplash();
+			$_order = $observer->getEvent()->getInvoice()->getOrder();
+			$_shippingAddress = $_order->getShippingAddress();
+			$_shippingMethod = $_shippingAddress->getAddressShippingMethod();
 
-        // Translate magento fields for whiplash
-        $_shipping_name = $_shippingAddress->getFirstname() . " " . $_shippingAddress->getLastname();
-        $order_attributes = array(
-                'shipping_name'         => $_shipping_name,
-                'shipping_company'      => $_shippingAddress->getCompany(),
-                'shipping_address_1'    => $_shippingAddress->getStreetFull(), // All address lines gets truncated into 1
-                'shipping_city'         => $_shippingAddress->getCity(),
-                'shipping_state'        => $_shippingAddress->getRegion(),
-                'shipping_zip'          => $_shippingAddress->getPostcode(),
-                'shipping_country'      => $_shippingAddress->getCountry_id(),
-                'email'                 => $_order->getCustomerEmail(),
-                'originator_id'         => $_order->getRealOrderId(),
-                'order_orig'            => $_order->getRealOrderId(),
-                'req_ship_method_text'  => $_order->getShippingMethod(),
-                'req_ship_method_price' => $_order->getShippingAmount(),
-                'order_items_attributes' => array()
-            );
+			// Translate magento fields for whiplash
+			$_shipping_name = $_shippingAddress->getFirstname() . " " . $_shippingAddress->getLastname();
+			$order_attributes = array(
+					'shipping_name'         => $_shipping_name,
+					'shipping_company'      => $_shippingAddress->getCompany(),
+					'shipping_address_1'    => $_shippingAddress->getStreetFull(), // All address lines gets truncated into 1
+					'shipping_city'         => $_shippingAddress->getCity(),
+					'shipping_state'        => $_shippingAddress->getRegion(),
+					'shipping_zip'          => $_shippingAddress->getPostcode(),
+					'shipping_country'      => $_shippingAddress->getCountry_id(),
+					'email'                 => $_order->getCustomerEmail(),
+					'originator_id'         => $_order->getRealOrderId(),
+					'order_orig'            => $_order->getRealOrderId(),
+					'req_ship_method_text'  => $_order->getShippingMethod(),
+					'req_ship_method_price' => $_order->getShippingAmount(),
+					'order_items_attributes' => array()
+				);
 
-        // Add the order_items
-        $items = $_order->getAllVisibleItems();
-        $i = 0;
-        foreach ($items as $itemId => $item)
-            {
-                if ($item->getQtyOrdered() > 0){
-                    // There are master items on the invoice, we only want the 'real' items
-                    $whiplash_item = $api->get_items_by_sku($item->getSku()); // This is an array; we want to the first result
-                    // Find the id of the whiplash item
-                    $whiplash_item = $whiplash_item[0];
-                    $order_attributes['order_items'][$i] = array('quantity' => $item->getQtyOrdered(), 'item_id' => $whiplash_item->id);
-                    $i += 1;
-                }
-            }
-        // Post to Whiplash
-        $order = $api->create_order($order_attributes); 
-
-    }    
+			// Add the order_items
+			$items = $_order->getAllVisibleItems();
+			$i = 0;
+			foreach ($items as $itemId => $item)
+				{
+					if ($item->getQtyOrdered() > 0){
+						// There are master items on the invoice, we only want the 'real' items
+						$whiplash_item = $api->get_items_by_sku($item->getSku()); // This is an array; we want to the first result
+						// Find the id of the whiplash item
+						$whiplash_item = $whiplash_item[0];
+						$order_attributes['order_items'][$i] = array('quantity' => $item->getQtyOrdered(), 'item_id' => $whiplash_item->id);
+						$i += 1;
+					}
+				}
+			// Post to Whiplash
+			$order = $api->create_order($order_attributes);
+		}
+    }
 
     // public function update_order($observer){
     // Not currently supported. This could overwrite intentional changes in Whiplash. Possibly see which side is newer to allow it through?

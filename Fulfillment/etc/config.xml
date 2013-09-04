@@ -39,6 +39,7 @@
     <default>
         <whiplash>
             <api>
+                <enabled>0</enabled>
                 <key></key> <!-- No key by default-->
                 <version></version> <!-- Latest Version (i.e. no value) by default-->
                 <test_mode>1</test_mode> <!-- Test mode by default-->
