@@ -50,12 +50,13 @@ class Whiplash_Fulfillment_Model_Observer extends Varien_Object
         // Set the API credentials
         $api_key = Mage::getStoreConfig('whiplash/api/key'); // Whiplash Sandbox on Testing Server
         $api_version =  Mage::getStoreConfig('whiplash/api/version'); // OPTIONAL: Leave this blank to use the most recent API
+        $storeId = $this->isEnabled();
         $test = Mage::getStoreConfig('whiplash/api/test_mode'); // OPTIONAL: If test is true, this will use your sandbox account
 
         // Include the Whiplash lib and initialize
         $ExternalLibPath=Mage::getBaseDir('code') . DS . 'community' . DS . 'Whiplash' . DS . 'Fulfillment'. DS . 'lib' . DS .'WhiplashApi.php';
         require_once ($ExternalLibPath);
-        $api = new WhiplashApi($api_key, $api_version, $test);
+        $api = new WhiplashApi($api_key, $api_version, $storeId, $test);
         return $api;
     }
 

@@ -38,16 +38,22 @@ class WhiplashApi extends Varien_Object
 		public $connection;
 
     // Constructor
-    public function WhiplashApi($api_key, $api_version='', $test=false) {
+    public function WhiplashApi($api_key, $api_version='', $storeId, $test=false) {
 			if ($test == true) {
-				$this->base_url = 'http://testing.whiplashmerch.com/api/';
+				$this->base_url = 'http://localhost:3000/api/';
 			} else {
 				$this->base_url = 'https://www.whiplashmerch.com/api/';
 			}
 			
 			$ch = curl_init();
     	// Set headers
-			$headers = array('Content-type: application/json', 'Accept: application/json', "X-API-KEY: $api_key");
+			$headers = array(
+				'Content-type: application/json',
+				'Accept: application/json',
+				"X-API-KEY: $api_key",
+				'Provider: magento',
+				"Shop-ID: $storeId"
+				);
 
 			if ($api_version != '') {
 				array_push($headers, "X-API-VERSION: $api_version");
