@@ -33,13 +33,17 @@
 
 class Whiplash_Fulfillment_Model_Observer extends Varien_Object
 {
-	protected function isEnabled()
+	protected function isEnabled($storeId=null)
 	{
-		$storeId = Mage::app()->getStore()->getId();
-		if($storeId == 0) // If the store id is 0 then we are in the admin area
+		if($storeId == null)
 		{
-			// We want to make sure that whiplash is enabled for the requested store, if there is a requested store
-			$storeId = Mage::app()->getRequest()->getParam('store'); //storeId will contain either a store id, or null, if no specific store was requested
+			$storeId = Mage::app()->getStore()->getId();
+
+			if($storeId == 0) // If the store id is 0 then we are in the admin area
+			{
+				// We want to make sure that whiplash is enabled for the requested store, if there is a requested store
+				$storeId = Mage::app()->getRequest()->getParam('store'); //storeId will contain either a store id, or null, if no specific store was requested
+			}
 		}
 
 		return Mage::getStoreConfig('whiplash/api/enabled',$storeId);
@@ -111,10 +115,10 @@ class Whiplash_Fulfillment_Model_Observer extends Varien_Object
     public function create_order($observer)
     // Creates an order and order_items in Whiplash
     {
-		if($this->isEnabled())
+		$api = $this->init_whiplash();
+		$_order = $observer->getEvent()->getInvoice()->getOrder();
+		if($this->isEnabled($_order->getStoreId()))
 		{
-			$api = $this->init_whiplash();
-			$_order = $observer->getEvent()->getInvoice()->getOrder();
 			$_shippingAddress = $_order->getShippingAddress();
 			$_shippingMethod = $_shippingAddress->getAddressShippingMethod();
 
