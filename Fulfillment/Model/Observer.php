@@ -33,19 +33,22 @@
 
 class Whiplash_Fulfillment_Model_Observer extends Varien_Object
 {
-	protected function isEnabled($storeId=null)
-	{
-		if($storeId == null)
-		{
-			$storeId = Mage::app()->getStore()->getId();
 
-			if($storeId == 0) // If the store id is 0 then we are in the admin area
-			{
-				// We want to make sure that whiplash is enabled for the requested store, if there is a requested store
-				$storeId = Mage::app()->getRequest()->getParam('store'); //storeId will contain either a store id, or null, if no specific store was requested
-			}
+	protected function getStoreId()
+	{
+		$storeId = Mage::app()->getStore()->getId();
+
+		if($storeId == 0) // If the store id is 0 then we are in the admin area
+		{
+			// We want to make sure that whiplash is enabled for the requested store, if there is a requested store
+			$storeId = Mage::app()->getRequest()->getParam('store', Mage::getStoreConfig('whiplash/api/default_store_to_update')); //storeId will contain either a store id, or the "Default Store [id] to Update" if no specific store was requested
 		}
 
+		return $storeId;
+	}
+
+	protected function isEnabledForStoreId($storeId)
+	{
 		return Mage::getStoreConfig('whiplash/api/enabled',$storeId);
 	}
 
@@ -53,11 +56,11 @@ class Whiplash_Fulfillment_Model_Observer extends Varien_Object
     {
         // Set the API credentials
         $api_key = Mage::getStoreConfig('whiplash/api/key'); // Whiplash Sandbox on Testing Server
-        $api_version =  Mage::getStoreConfig('whiplash/api/version'); // OPTIONAL: Leave this blank to use the most recent API
-		$storeId = Mage::app()->getStore()->getId();
-        $test = Mage::getStoreConfig('whiplash/api/test_mode'); // OPTIONAL: If test is true, this will use your sandbox account
+        $api_version = Mage::getStoreConfig('whiplash/api/version'); // OPTIONAL: Leave this blank to use the most recent API
+		$storeId = $this->getStoreId();
+		$test = Mage::getStoreConfig('whiplash/api/test_mode'); // OPTIONAL: If test is true, this will use your sandbox account
 
-        // Include the Whiplash lib and initialize
+		// Include the Whiplash lib and initialize
         $ExternalLibPath=Mage::getBaseDir('code') . DS . 'community' . DS . 'Whiplash' . DS . 'Fulfillment'. DS . 'lib' . DS .'WhiplashApi.php';
         require_once ($ExternalLibPath);
         $api = new WhiplashApi($api_key, $api_version, $storeId, $test);
@@ -67,7 +70,7 @@ class Whiplash_Fulfillment_Model_Observer extends Varien_Object
     public function update_or_create_item($observer)
     // Creates or updates an item in Whiplash
     {
-		if($this->isEnabled())
+		if($this->isEnabledForStoreId($this->getStoreId()))
 		{
 			$api = $this->init_whiplash();
 			$_product = $observer->getProduct();
@@ -117,7 +120,7 @@ class Whiplash_Fulfillment_Model_Observer extends Varien_Object
     {
 		$api = $this->init_whiplash();
 		$_order = $observer->getEvent()->getInvoice()->getOrder();
-		if($this->isEnabled($_order->getStoreId()))
+		if($this->isEnabledForStoreId($_order->getStoreId()))
 		{
 			$_shippingAddress = $_order->getShippingAddress();
 			$_shippingMethod = $_shippingAddress->getAddressShippingMethod();

@@ -43,6 +43,15 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </version>
+                        <default_store_to_update translate="label">
+                            <label>Default Store to Update</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_store</source_model>
+                            <comment>Select the store that will get updated by default when no specific store view is selected when saving a product</comment>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                        </default_store_to_update>
                         <test_mode translate="label">
                             <label>Test Mode</label>
                             <frontend_type>select</frontend_type>
