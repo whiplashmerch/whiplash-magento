@@ -152,9 +152,11 @@ class Whiplash_Fulfillment_Model_Observer extends Varien_Object
 						// There are master items on the invoice, we only want the 'real' items
 						$whiplash_item = $api->get_items_by_sku($item->getSku()); // This is an array; we want to the first result
 						// Find the id of the whiplash item
-						$whiplash_item = $whiplash_item[0];
-						$order_attributes['order_items'][$i] = array('quantity' => $item->getQtyOrdered(), 'item_id' => $whiplash_item->id);
-						$i += 1;
+						if ( is_array($whiplash_item) ) {
+							$whiplash_item = $whiplash_item[0];
+							$order_attributes['order_items'][$i] = array('quantity' => $item->getQtyOrdered(), 'item_id' => $whiplash_item->id);
+							$i += 1;
+						}
 					}
 				}
 			// Post to Whiplash

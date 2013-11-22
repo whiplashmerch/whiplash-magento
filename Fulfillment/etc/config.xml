@@ -26,15 +26,15 @@
                     </whiplash_fulfillment_product_observer>                    
                 </observers>
             </catalog_product_save_after>
-            <sales_order_invoice_register>
+            <sales_order_invoice_pay>
                 <observers>
                     <whiplash_fulfillment_order_observer>
                         <class>Whiplash_Fulfillment_Model_Observer</class>
                         <method>create_order</method>
                     </whiplash_fulfillment_order_observer>                    
                 </observers>
-            </sales_order_invoice_register>
-        </events>
+            </sales_order_invoice_pay>
+       </events>
     </global>
     <default>
         <whiplash>
