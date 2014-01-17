@@ -63,7 +63,7 @@ class WhiplashApi extends Varien_Object
 			$this->connection = $ch;
     }
 
-		// Basic REST functions
+	// Basic REST functions
 		public function get($path, $params=array()) {
 			$json_url = $this->base_url . $path; 
 			$json_url .= '?' . http_build_query($params);
@@ -127,7 +127,7 @@ class WhiplashApi extends Varien_Object
 		// This requires a valid ID
 		public function create_item($params=array()) {
 			$p = array();
-			if (!$params['item']) {
+			if (!array_key_exists('item', $params)) {
 				$p['item'] = $params;
 			} else {
 				$p = $params;
@@ -138,7 +138,7 @@ class WhiplashApi extends Varien_Object
 		// This requires a valid ID
 		public function update_item($id, $params=array()) {
 			$p = array();
-			if (!$params['item']) {
+			if (!array_key_exists('item', $params)) {
 				$p['item'] = $params;
 			} else {
 				$p = $params;
@@ -172,14 +172,16 @@ class WhiplashApi extends Varien_Object
 		// This requires a valid ID
 		public function create_order($params=array()) {
 			$p = array();
-			if (!$params['order']) {
+			if ( !array_key_exists('order', $params)){
 				$p['order'] = $params;
 			} else {
 				$p = $params;
 			}
-			if ($p['order']['order_items']) {
-				$p['order']['order_items_attributes'] = $p['order']['order_items'];
-				unset($p['order']['order_items']);
+			if ( array_key_exists('order', $p) ){
+				if (array_key_exists('order_items', $p['order'])) {
+					$p['order']['order_items_attributes'] = $p['order']['order_items'];
+					unset($p['order']['order_items']);
+				}
 			}
 			return $this->post('orders', $p);
 		}
@@ -187,7 +189,7 @@ class WhiplashApi extends Varien_Object
 		// This requires a valid ID
 		public function update_order($id, $params=array()) {
 			$p = array();
-			if (!$params['order']) {
+			if ( !array_key_exists('order', $params) ){
 				$p['order'] = $params;
 			} else {
 				$p = $params;
@@ -213,7 +215,7 @@ class WhiplashApi extends Varien_Object
 		// This requires a valid ID
 		public function create_order_item($params=array()) {
 			$p = array();
-			if (!$params['order_item']) {
+			if (!array_key_exists('order_item', $params)) {
 				$p['order_item'] = $params;
 			} else {
 				$p = $params;
@@ -224,7 +226,7 @@ class WhiplashApi extends Varien_Object
 		// This requires a valid ID
 		public function update_order_item($id, $params=array()) {
 			$p = array();
-			if (!$params['order_item']) {
+			if (!array_key_exists('order_item', $params)) {
 				$p['order_item'] = $params;
 			} else {
 				$p = $params;
