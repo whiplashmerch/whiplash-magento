@@ -135,6 +135,7 @@ class Whiplash_Fulfillment_Model_Observer extends Varien_Object
 					'shipping_state'        => $_shippingAddress->getRegion(),
 					'shipping_zip'          => $_shippingAddress->getPostcode(),
 					'shipping_country'      => $_shippingAddress->getCountry_id(),
+					'shipping_phone'		=> $_shippingAddress->getTelephone(),
 					'email'                 => $_order->getCustomerEmail(),
 					'originator_id'         => $_order->getRealOrderId(),
 					'order_orig'            => $_order->getRealOrderId(),
