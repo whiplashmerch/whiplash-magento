@@ -125,12 +125,16 @@ class Whiplash_Fulfillment_Model_Observer extends Varien_Object
 			$_shippingAddress = $_order->getShippingAddress();
 			$_shippingMethod = $_shippingAddress->getAddressShippingMethod();
 
+			// The shipping street comes in as one big value
+			$full_street = $_shippingAddress->getStreetFull();
+			$shipping_street_array = explode("\n", $full_street);
+
 			// Translate magento fields for whiplash
 			$_shipping_name = $_shippingAddress->getFirstname() . " " . $_shippingAddress->getLastname();
 			$order_attributes = array(
 					'shipping_name'         => $_shipping_name,
 					'shipping_company'      => $_shippingAddress->getCompany(),
-					'shipping_address_1'    => $_shippingAddress->getStreetFull(), // All address lines gets truncated into 1
+					'shipping_address_1'    => $shipping_street_array[0],
 					'shipping_city'         => $_shippingAddress->getCity(),
 					'shipping_state'        => $_shippingAddress->getRegion(),
 					'shipping_zip'          => $_shippingAddress->getPostcode(),
@@ -143,6 +147,14 @@ class Whiplash_Fulfillment_Model_Observer extends Varien_Object
 					'req_ship_method_price' => $_order->getShippingAmount(),
 					'order_items_attributes' => array()
 				);
+
+			// Set the second address field, if necessary
+			if (count($shipping_street_array) > 1) {
+				array_shift($shipping_street_array);
+				$order_attributes['shipping_address_2'] = implode(',', $shipping_street_array); 
+			}
+
+			if ($order_attributes)
 
 			// Add the order_items
 			$items = $_order->getAllVisibleItems();
