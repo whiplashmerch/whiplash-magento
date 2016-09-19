@@ -117,7 +117,7 @@ class WhiplashApi extends Varien_Object
 		}
 
 		public function get_items_by_sku($sku, $params=array()) {
-			return $this->get('items/sku/'.urlencode($sku), $params);
+			return $this->get('items/sku/'.rawurlencode($sku), $params);
 		}
 
 		public function get_item_by_originator($id) {
