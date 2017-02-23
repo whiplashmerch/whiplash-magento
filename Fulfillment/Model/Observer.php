@@ -27,7 +27,7 @@
 * @category Whiplash
 * @package Fulfillment
 * @author James Marks <james@whiplashmerch.com> based on the work of Marko Martinović <marko.martinovic@inchoo.net>
-* @copyright Copyright (c) Whiplash Merch (http://whiplashmerch.com/)
+* @copyright Copyright (c) Whiplash Merch (http://www.getwhiplash.com/)
 * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
 */
 
@@ -185,7 +185,7 @@ class Whiplash_Fulfillment_Model_Observer extends Varien_Object
     //             'shipping_zip'          => $_shippingAddress->getPostcode(),
     //             'shipping_country'      => $_shippingAddress->getCountry_id(),
     //             'email'                 => $_order->getCustomerEmail(),
-    //             'originator_id'         => $_order->getEntity_id(), 
+    //             'originator_id'         => $_order->getEntity_id(),
     //             'order_orig'            => $_order->getRealOrderId(),
     //             'req_ship_method_text'  => $_order->getShipping_method(),
     //             'req_ship_method_price' => $_order->getShipping_amount()
@@ -195,7 +195,7 @@ class Whiplash_Fulfillment_Model_Observer extends Varien_Object
     //     $whiplash_order = $api->get_order_by_originator($_order->getEntity_id());
 
     //     // Post to Whiplash
-    //     $order = $api->update_order($whiplash_order->id, $order_attributes); 
+    //     $order = $api->update_order($whiplash_order->id, $order_attributes);
 
 
     // }
