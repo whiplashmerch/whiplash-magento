@@ -155,7 +155,7 @@ class Whiplash_Fulfillment_Model_Observer extends Varien_Object
 						// Find the id of the whiplash item
 						if ( is_array($whiplash_item) ) {
 							$whiplash_item = $whiplash_item[0];
-							$order_attributes['order_items'][$i] = array('quantity' => $item->getQtyOrdered(), 'item_id' => $whiplash_item->id, 'originator_id' => $item->getId(), 'price' => $item->getRowTotalInclTax()/$item->getQtyOrdered());
+							$order_attributes['order_items'][$i] = array('quantity' => $item->getQtyOrdered(), 'item_id' => $whiplash_item->id, 'originator_id' => $item->getId(), 'price' => ($item->getRowTotalInclTax()-$item->getDiscountInvoiced())/$item->getQtyOrdered());
 							$i += 1;
 						}
 					}
@@ -185,7 +185,7 @@ class Whiplash_Fulfillment_Model_Observer extends Varien_Object
     //             'shipping_zip'          => $_shippingAddress->getPostcode(),
     //             'shipping_country'      => $_shippingAddress->getCountry_id(),
     //             'email'                 => $_order->getCustomerEmail(),
-    //             'originator_id'         => $_order->getEntity_id(), 
+    //             'originator_id'         => $_order->getEntity_id(),
     //             'order_orig'            => $_order->getRealOrderId(),
     //             'req_ship_method_text'  => $_order->getShipping_method(),
     //             'req_ship_method_price' => $_order->getShipping_amount()
@@ -195,7 +195,7 @@ class Whiplash_Fulfillment_Model_Observer extends Varien_Object
     //     $whiplash_order = $api->get_order_by_originator($_order->getEntity_id());
 
     //     // Post to Whiplash
-    //     $order = $api->update_order($whiplash_order->id, $order_attributes); 
+    //     $order = $api->update_order($whiplash_order->id, $order_attributes);
 
 
     // }
