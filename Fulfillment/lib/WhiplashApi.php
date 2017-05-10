@@ -27,7 +27,7 @@
 * @category Whiplash
 * @package Fulfillment
 * @author James Marks <james@whiplashmerch.com> based on the work of Marko Martinović <marko.martinovic@inchoo.net>
-* @copyright Copyright (c) Whiplash Merch (http://whiplashmerch.com/)
+* @copyright Copyright (c) Whiplash Merch (https://getwhiplash.com/)
 * @license http://opensource.org/licenses/osl-3.0.php Open Software License (OSL 3.0)
 */
 
@@ -40,9 +40,9 @@ class WhiplashApi extends Varien_Object
     // Constructor
     public function WhiplashApi($api_key, $api_version='', $storeId, $test=false) {
 			if ($test == true) {
-				$this->base_url = 'http://testing.whiplashmerch.com/api/';
+				$this->base_url = 'http://staging.getwhiplash.com/api/';
 			} else {
-				$this->base_url = 'https://www.whiplashmerch.com/api/';
+				$this->base_url = 'https://www.getwhiplash.com/api/';
 			}
 
 			$ch = curl_init();
