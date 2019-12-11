@@ -44,6 +44,10 @@ class WhiplashApi extends Varien_Object
 			} else {
 				$this->base_url = 'https://www.getwhiplash.com/api/';
 			}
+      if (Mage::getStoreConfig('whiplash/api/dev_mode') == true) {
+        $this->base_url = Mage::getStoreConfig('whiplash/api/dev_mode_url');
+      }
+
 
 			$ch = curl_init();
     	// Set headers
